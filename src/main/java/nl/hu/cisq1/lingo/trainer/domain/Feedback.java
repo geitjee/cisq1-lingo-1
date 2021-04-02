@@ -9,6 +9,8 @@ public class Feedback {
     private String attempt;
     private List<Mark> marks;
 
+    private String hint;
+
     public Feedback(String attempt, List<Mark> marks) {
         if (attempt.length() != marks.size()){
             throw new InvalidFeedbackException("attempt and feedback don't have the same lenght!");
@@ -21,8 +23,34 @@ public class Feedback {
         return marks.stream().allMatch(m -> m.equals(Mark.CORRECT));
     }
 
-    public boolean isGuessInvalid(){//if guess is not the same lenght or non existent
-        return marks.stream().allMatch(m -> m.equals(Mark.INVALID));
+    public boolean isGuessValid(){//if guess is not the same lenght or non existent
+        return marks.stream().noneMatch (m -> m.equals(Mark.INVALID));
+    }
+
+    public String giveHint(String previousHint, String wordToGuess){
+        if (previousHint == null || previousHint.isEmpty() || previousHint.length() != wordToGuess.length()){
+            previousHint = wordToGuess.charAt(0) + ".".repeat(wordToGuess.length()-1);
+        }
+        if(!isGuessValid()){
+            hint = previousHint;
+            return previousHint;
+        }
+        StringBuilder newHint = new StringBuilder();
+        for (int i = 0; i < wordToGuess.length(); i++) {
+            if (marks.get(i) == Mark.CORRECT) {
+                newHint.append(attempt.charAt(i));
+            }else if (previousHint.charAt(i) != '.') {
+                newHint.append(previousHint.charAt(i));
+            } else {
+                newHint.append('.');
+            }
+        }
+        hint = newHint.toString();
+        return hint;
+    }
+
+    public String getHint() {
+        return hint;
     }
 
     @Override
@@ -30,12 +58,12 @@ public class Feedback {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Feedback feedback = (Feedback) o;
-        return Objects.equals(attempt, feedback.attempt) && Objects.equals(marks, feedback.marks);
+        return Objects.equals(attempt, feedback.attempt) && Objects.equals(marks, feedback.marks) && Objects.equals(hint, feedback.hint);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(attempt, marks);
+        return Objects.hash(attempt, marks, hint);
     }
 
     @Override
@@ -43,6 +71,7 @@ public class Feedback {
         return "Feedback{" +
                 "attempt='" + attempt + '\'' +
                 ", marks=" + marks +
+                ", hint='" + hint + '\'' +
                 '}';
     }
 }
