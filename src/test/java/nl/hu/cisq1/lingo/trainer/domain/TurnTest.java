@@ -25,10 +25,10 @@ class TurnTest {
     @DisplayName("Turn feedback is correct")
     void TurnFeedbackIsCorrect(){
         Turn turn = new Turn("KAASJE");//woord om te raden is baard
-        Feedback expectedFeedback = new Feedback("POESEN", List.of(Mark.ABSENT, Mark.ABSENT, Mark.PRESENT, Mark.CORRECT, Mark.ABSENT, Mark.ABSENT));
+        Feedback expectedFeedback = new Feedback("poesen", List.of(Mark.ABSENT, Mark.ABSENT, Mark.PRESENT, Mark.CORRECT, Mark.ABSENT, Mark.ABSENT));
         expectedFeedback.giveHint(null, turn.getWordToGuess());
-        assertTrue(expectedFeedback.equals(turn.guessAttempt("POESEN")));
-        assertEquals(expectedFeedback.hashCode(), turn.guessAttempt("POESEN").hashCode());
+        assertTrue(expectedFeedback.equals(turn.guessAttempt("poesen")));
+        assertEquals(expectedFeedback.hashCode(), turn.guessAttempt("poesen").hashCode());
     }
 
     @Test
@@ -45,16 +45,16 @@ class TurnTest {
     @Test
     @DisplayName("gets correct hint.")
     void GetHint(){
-        Turn turn = new Turn("KAASJE");
-        assertEquals("K.....", turn.getHint());
-        turn.guessAttempt("KOEKJE");
-        assertEquals("K...JE", turn.getHint());
-        turn.guessAttempt("FOUT");
-        assertEquals("K...JE", turn.getHint());
-        turn.guessAttempt("POESEN");
-        assertEquals("K..SJE", turn.getHint());
-        turn.guessAttempt("KAASJE");
-        assertEquals("KAASJE", turn.getHint());
+        Turn turn = new Turn("kaasje");
+        assertEquals("k.....", turn.getHint());
+        turn.guessAttempt("koekje");
+        assertEquals("k...je", turn.getHint());
+        turn.guessAttempt("fout");
+        assertEquals("k...je", turn.getHint());
+        turn.guessAttempt("poesen");
+        assertEquals("k..sje", turn.getHint());
+        turn.guessAttempt("kaasje");
+        assertEquals("kaasje", turn.getHint());
     }
 
     @Test
@@ -66,13 +66,13 @@ class TurnTest {
         turn.guessAttempt("POESEN");
         turn.guessAttempt("KAASJE");
 
-        Feedback f1 = new Feedback("KOEKJE", List.of(Mark.CORRECT, Mark.ABSENT, Mark.ABSENT, Mark.ABSENT, Mark.CORRECT, Mark.CORRECT));
+        Feedback f1 = new Feedback("koekje", List.of(Mark.CORRECT, Mark.ABSENT, Mark.ABSENT, Mark.ABSENT, Mark.CORRECT, Mark.CORRECT));
         f1.giveHint(null, turn.getWordToGuess());
-        Feedback f2 = new Feedback("FOUT", List.of(Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID));
+        Feedback f2 = new Feedback("fout", List.of(Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID));
         f2.giveHint(f1.getHint(), turn.getWordToGuess());
-        Feedback f3 = new Feedback("POESEN", List.of(Mark.ABSENT, Mark.ABSENT, Mark.PRESENT, Mark.CORRECT, Mark.ABSENT, Mark.ABSENT));
+        Feedback f3 = new Feedback("poesen", List.of(Mark.ABSENT, Mark.ABSENT, Mark.PRESENT, Mark.CORRECT, Mark.ABSENT, Mark.ABSENT));
         f3.giveHint(f2.getHint(), turn.getWordToGuess());
-        Feedback f4 = new Feedback("KAASJE", List.of(Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.CORRECT));
+        Feedback f4 = new Feedback("kaasje", List.of(Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.CORRECT));
         f4.giveHint(f3.getHint(), turn.getWordToGuess());
         List<Feedback> expectedFeedback = List.of(f1, f2, f3, f4);
 
