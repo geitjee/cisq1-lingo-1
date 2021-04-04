@@ -30,22 +30,22 @@ class GameTest {
     @DisplayName("can't start a new turn twice in a row")
     void StartGameTurnTwice() {
         Game game = new Game();
-        game.startNewTurn(new Word("BAARD"));
-        assertThrows(InvalidStateException.class, () -> game.startNewTurn(new Word("BAARS")));
+        game.startNewTurn("BAARD");
+        assertThrows(InvalidStateException.class, () -> game.startNewTurn("BAARS"));
     }
 
     @Test
     @DisplayName("After 5 tries the gameState is lost, you can't start a new turn and can't make another guess")
     void LoseGameTest() {
         Game game = new Game();
-        game.startNewTurn(new Word("BAARD"));
+        game.startNewTurn("BAARD");
         game.makeGuess("SNOEP");
         game.makeGuess("SNOEP");
         game.makeGuess("SNOEP");
         game.makeGuess("SNOEP");
         game.makeGuess("SNOEP");
         assertEquals(GameStatus.LOST, game.getStatus());
-        assertThrows(InvalidStateException.class, () -> game.startNewTurn(new Word("BAARS")));
+        assertThrows(InvalidStateException.class, () -> game.startNewTurn("BAARS"));
         assertThrows(InvalidStateException.class, () -> game.makeGuess("SNOEP"));
     }
 
@@ -54,7 +54,7 @@ class GameTest {
     @DisplayName("After winning the wordlenght increases 1 and if the lenght was 7 it goes to 5")
     void WordLenghtIncreases(String word, int currentLenght, int expectedLenght) {
         Game game = new Game();
-        game.startNewTurn(new Word(word));
+        game.startNewTurn(word);
         assertEquals(currentLenght, game.getWordLength());
         game.makeGuess(word);
         assertEquals(expectedLenght, game.getWordLength());
@@ -73,7 +73,7 @@ class GameTest {
     @DisplayName("After winning the wordlenght increases 1 and if the lenght was 7 it goes to 5")
     void ScoreIncreasesTest(String word, int attempts, int expectedScore) {
         Game game = new Game();
-        game.startNewTurn(new Word(word));
+        game.startNewTurn(word);
         for (int i = 0; i < attempts-1; i++) {
             game.makeGuess("FOUT");
         }

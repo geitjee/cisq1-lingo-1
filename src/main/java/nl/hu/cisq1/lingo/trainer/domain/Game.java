@@ -1,29 +1,36 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
 import nl.hu.cisq1.lingo.trainer.domain.exceptions.InvalidStateException;
-import nl.hu.cisq1.lingo.words.domain.Word;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class Game {
 
-    private int score;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @Column
+    private int score = 0;
+
+    @Column
     private int wordLength;
-    private GameStatus status;
 
+    @Enumerated(EnumType.STRING)
+    private GameStatus status = GameStatus.STARTING;
+
+    @OneToOne(cascade = CascadeType.ALL)
     private Turn currentTurn;
-    private List<Turn> turnList;
 
-    public Game() {
-        this.score = 0;
-        this.status = GameStatus.STARTING;
-        this.currentTurn = null;
-        this.turnList = new ArrayList<Turn>();
-    }
-    public void startNewTurn(Word word){
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Turn> turnList = new ArrayList<>();
+
+    public void startNewTurn(String word){
         if (status == GameStatus.STARTING || status == GameStatus.WON){
-            this.wordLength = word.getLength();
+            this.wordLength = word.length();
             currentTurn = new Turn(word);
             status = GameStatus.PLAYING;
         }else if (status == GameStatus.PLAYING){
@@ -34,6 +41,7 @@ public class Game {
     }
 
     public GameStatus makeGuess(String attempt){
+        System.out.println(attempt + "3");
         if (status == GameStatus.PLAYING){
             Feedback feedback = currentTurn.guessAttempt(attempt);
             if (feedback.isWordGuessed()){
@@ -87,5 +95,9 @@ public class Game {
 
     public GameStatus getStatus() {
         return status;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
