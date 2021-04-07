@@ -1,10 +1,10 @@
 package nl.hu.cisq1.lingo.trainer.application;
 
-import nl.hu.cisq1.lingo.trainer.application.exceptions.InvalidIdException;
+import nl.hu.cisq1.lingo.trainer.application.exceptions.IdNotFoundException;
 import nl.hu.cisq1.lingo.trainer.data.GameRepository;
 import nl.hu.cisq1.lingo.trainer.domain.Game;
-import nl.hu.cisq1.lingo.trainer.presentation.DTO.OutputGameDTO;
-import nl.hu.cisq1.lingo.trainer.presentation.DTO.OutputGameTurnDTO;
+import nl.hu.cisq1.lingo.trainer.presentation.dto.OutputGameDTO;
+import nl.hu.cisq1.lingo.trainer.presentation.dto.OutputGameTurnDTO;
 import nl.hu.cisq1.lingo.words.application.WordService;
 import org.springframework.stereotype.Service;
 
@@ -30,15 +30,14 @@ public class GameService {
     }
 
     public OutputGameTurnDTO startNewTurn(Long id){
-        game = repository.findById(id).orElseThrow(() -> new InvalidIdException("No game found with id: " + id));
+        game = repository.findById(id).orElseThrow(() -> new IdNotFoundException("No game found with id: " + id));
         game.startNewTurn(wordService.provideRandomWord(game.getWordLength()));
         this.repository.save(game);
         return gameToOutputDTO();
     }
 
     public OutputGameTurnDTO guess(String attempt, Long id){
-        System.out.println(attempt + "2");
-        game = repository.findById(id).orElseThrow(() -> new InvalidIdException("No game found with id: " + id));
+        game = repository.findById(id).orElseThrow(() -> new IdNotFoundException("No game found with id: " + id));
         game.makeGuess(attempt);
         this.repository.save(game);
         return gameToOutputDTO();
@@ -49,6 +48,6 @@ public class GameService {
     }
 
     public OutputGameDTO getGame(Long id){
-        return new OutputGameDTO(repository.findById(id).orElseThrow(() -> new InvalidIdException("No game found with id: " + id)));
+        return new OutputGameDTO(repository.findById(id).orElseThrow(() -> new IdNotFoundException("No game found with id: " + id)));
     }
 }

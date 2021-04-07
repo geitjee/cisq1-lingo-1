@@ -62,7 +62,6 @@ public class Turn {
     }
 
     private List<Mark> getMarks(String attempt){
-        System.out.println(wordToGuess + ", " + attempt);
         List<Mark> marks = new ArrayList<>();
         for (int i = 0; i < attempt.length(); i++) {
             if (attempt.length() != wordToGuess.length()){

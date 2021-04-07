@@ -1,9 +1,9 @@
 package nl.hu.cisq1.lingo.trainer.presentation;
 
 import nl.hu.cisq1.lingo.trainer.application.GameService;
-import nl.hu.cisq1.lingo.trainer.presentation.DTO.InputGuessDTO;
-import nl.hu.cisq1.lingo.trainer.presentation.DTO.OutputGameDTO;
-import nl.hu.cisq1.lingo.trainer.presentation.DTO.OutputGameTurnDTO;
+import nl.hu.cisq1.lingo.trainer.presentation.dto.InputGuessDTO;
+import nl.hu.cisq1.lingo.trainer.presentation.dto.OutputGameDTO;
+import nl.hu.cisq1.lingo.trainer.presentation.dto.OutputGameTurnDTO;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,13 +16,12 @@ public class GameController {
     }
 
     @GetMapping("/start")
-    public OutputGameTurnDTO startGame(){
+    public OutputGameTurnDTO startGame() {
         return service.startNewGame();
     }
 
     @PostMapping("/guess/{id}")
     public OutputGameTurnDTO guess(@RequestBody InputGuessDTO attempt, @PathVariable Long id){
-        System.out.println(attempt.attempt);
         return service.guess(attempt.attempt, id);
     }
 

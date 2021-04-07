@@ -32,6 +32,7 @@ public class Game {
         if (status == GameStatus.STARTING || status == GameStatus.WON){
             this.wordLength = word.length();
             currentTurn = new Turn(word);
+            turnList.add(currentTurn);
             status = GameStatus.PLAYING;
         }else if (status == GameStatus.PLAYING){
             throw new InvalidStateException("A turn is already started, finish the turn before starting a new one");
@@ -41,16 +42,13 @@ public class Game {
     }
 
     public GameStatus makeGuess(String attempt){
-        System.out.println(attempt + "3");
         if (status == GameStatus.PLAYING){
             Feedback feedback = currentTurn.guessAttempt(attempt);
             if (feedback.isWordGuessed()){
                 addScore(currentTurn.getAttemptCount());
-                turnList.add(currentTurn);
                 status = GameStatus.WON;
                 increaseWordLength();
             }else if (!feedback.isWordGuessed() && currentTurn.getAttemptCount() >= 5){
-                turnList.add(currentTurn);
                 status = GameStatus.LOST;
             } else{
                 status = GameStatus.PLAYING;
